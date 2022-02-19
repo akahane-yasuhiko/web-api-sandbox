@@ -1,0 +1,39 @@
+;;ユーザー名、秘密鍵の設定
+USERNAME='XXX'
+KEY_FILE='XXX.pem'
+IPADDR_FILE='ipaddress.txt'
+
+;; キーファイル名設定
+MACRO_DIR=''
+getdir MACRO_DIR
+strconcat KEY_FILE_PATH MACRO_DIR
+strconcat KEY_FILE_PATH '\'
+strconcat KEY_FILE_PATH KEY_FILE
+
+;; 設定ファイルから初期表示IPアドレス読込
+fileopen fhandle IPADDR_FILE 0
+filereadln fhandle HOSTADDR
+fileclose fhandle
+
+inputbox 'IP ADDRESS' 'Login' HOSTADDR
+NEW_HOSTADDR=inputstr
+
+;;コマンド組み立て
+COMMAND= NEW_HOSTADDR
+strconcat COMMAND ':443 /ssh /2 /auth=publickey /user='
+strconcat COMMAND USERNAME
+strconcat COMMAND ' /keyfile='
+strconcat COMMAND KEY_FILE_PATH
+
+;; サーバへ接続
+connect COMMAND
+
+;; 初期表示IPアドレスを更新
+strcompare HOSTADDR NEW_HOSTADDR
+if result != 0 then
+  fileopen fhandle IPADDR_FILE 0
+  filewriteln fhandle inputstr
+  fileclose fhandle
+endif
+
+end

@@ -1,0 +1,6 @@
+{
+  "groupId": "aka.sample",
+  "artifactId": "RestSample",
+  "artifactVersion": "1.0.0",
+  "library": "feign"
+}
