@@ -1,0 +1,9 @@
+{
+  "groupId": "aka.sample",
+  "artifactId": "RestSample",
+  "artifactVersion": "1.0.0",
+  "apiPackage":"aka.sample.generated.api",
+  "modelPackage":"aka.sample.generated.model",
+  "configPackage":"aka.sample.generated.config",
+  "basePackage":"aka.sample"
+}
