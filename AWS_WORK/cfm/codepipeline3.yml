@@ -245,7 +245,7 @@ Resources:
         PrivilegedMode: true
         EnvironmentVariables:
           - Name: AWS_ACCOUNT_ID
-            Value: '371399423562'
+            Value: '123456789012'
           - Name: IMAGE_REPO_NAME
             Value: ecr-private
       Name: !Ref AWS::StackName

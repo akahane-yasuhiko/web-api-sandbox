@@ -162,7 +162,7 @@ Parameters:
   #ECSImageName
   ECSImageName:
     Type: String
-    Default: '371399423562.dkr.ecr.us-east-1.amazonaws.com/ecr-private:latest'
+    Default: '123456789012.dkr.ecr.us-east-1.amazonaws.com/ecr-private:latest'
 
   #ECSServiceName
   ECSServiceName:
@@ -713,7 +713,7 @@ Resources:
   #                   - !Sub 'alb-log-${AWS::AccountId}'
   #                   - '/*'
   #           Principal:
-  #             AWS: '371399423562'
+  #             AWS: '123456789012'
   #         - Action:
   #             - 's3:PutObject'
   #           Effect: 'Allow'
