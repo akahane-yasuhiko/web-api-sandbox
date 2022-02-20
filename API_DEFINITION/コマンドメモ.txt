@@ -7,6 +7,6 @@ java -jar swagger-codegen-cli-3.0.31.jar config-help -l java
 
 https://github.com/swagger-api/swagger-codegen/issues/10966#issuecomment-934455905
 
-java --add-opens=java.base/java.util=ALL-UNNAMED -jar swagger-codegen-cli-3.0.31.jar generate -i usermanage.yaml -l spring -o ../API_SRC/usernamage -c config_spring_swagger.json
+java --add-opens=java.base/java.util=ALL-UNNAMED -jar swagger-codegen-cli-3.0.31.jar generate -i usermanage.yaml -l spring -o ./generated/java8-11 -c config_spring.json
 
 

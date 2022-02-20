@@ -1,0 +1,1 @@
+https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.6.3&packaging=jar&jvmVersion=17&groupId=aka.sample&artifactId=web-api-sandbox&name=web-api-sandbox&description=web-api-sandbox&packageName=aka.sample.web-api-sandbox&dependencies=lombok,web,mybatis,h2

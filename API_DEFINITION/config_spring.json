@@ -1,9 +1,14 @@
 {
   "groupId": "aka.sample",
-  "artifactId": "RestSample",
+  "artifactId": "web-api-sandbox",
   "artifactVersion": "1.0.0",
   "apiPackage":"aka.sample.generated.api",
   "modelPackage":"aka.sample.generated.model",
   "configPackage":"aka.sample.generated.config",
-  "basePackage":"aka.sample"
+  "basePackage":"aka.sample",
+  "hideGenerationTimestamp": true,
+  "dateLibrary":"java11",
+  "java8": true,
+  "tiele": "user manage server",
+  "defaultInterfaces": false
 }
