@@ -1,8 +1,9 @@
 package aka.sample.generated.config;
 
-import org.springframework.core.convert.converter.Converter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+
+import org.springframework.core.convert.converter.Converter;
 
 public class LocalDateConverter implements Converter<String, LocalDate> {
     private final DateTimeFormatter formatter;
