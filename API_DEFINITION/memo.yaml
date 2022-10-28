@@ -1,0 +1,97 @@
+openapi: 3.0.1
+info:
+  title: User Manage Sample
+  description: 'This is a sample server Petstore server.'
+  termsOfService: http://swagger.io/terms/
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: http://localhost:8080
+tags:
+- name: memo
+  description: Operations about memo
+paths:
+  /memos:
+    get:
+      tags:
+      - memos
+      summary: List of memos
+      operationId: memos
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemoGroups'
+        400:
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        404:
+          description: Not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    Memo:
+      type: object
+      properties:
+        thread_title: 
+          type: string
+        user_name:
+          type: string
+        memo_body:
+          type: string
+        update_datetime:
+          type: string
+    MemoGroup:
+      type: object
+      properties:
+        group_name: 
+          type: string
+        memos:
+          type: array
+          items:
+            $ref: '#/components/schemas/Memo'
+    MemoGroups:
+      type: array
+      items:
+        $ref: '#/components/schemas/MemoGroup'
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          format: string
+          maxLength: 8
+          minLength: 8
+        message:
+          type: string
+          maxLength: 2024
+          minLength: 1
+  # securitySchemes:
+  #   petstore_auth:
+  #     type: oauth2
+  #     flows:
+  #       implicit:
+  #         authorizationUrl: http://petstore.swagger.io/oauth/dialog
+  #         scopes:
+  #           write:pets: modify pets in your account
+  #           read:pets: read your pets
+  #   api_key:
+  #     type: apiKey
+  #     name: api_key
+  #     in: header

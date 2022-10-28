@@ -10,3 +10,5 @@ https://github.com/swagger-api/swagger-codegen/issues/10966#issuecomment-9344559
 java --add-opens=java.base/java.util=ALL-UNNAMED -jar swagger-codegen-cli-3.0.31.jar generate -i usermanage.yaml -l spring -o ./generated/java8-11 -c config_spring.json
 
 
+java --add-opens=java.base/java.util=ALL-UNNAMED -jar swagger-codegen-cli-3.0.31.jar generate -i memo.yaml -l spring -o ./generated/memo -c config_spring.json
+

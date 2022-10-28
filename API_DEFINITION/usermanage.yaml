@@ -14,12 +14,16 @@ tags:
   description: Operations about user
 - name: role
   description: Operations about role
-- name: menu
-  description: Operations about menu
+- name: operation
+  description: Operations about operation
+- name: device
+  description: Operations about device
 - name: user-role
   description: Operations about user and role relationships
-- name: role-menu
-  description: Operations about role and menu relationships
+- name: role-operation
+  description: Operations about role and operation relationships
+- name: user-device
+  description: Operations about user and device relationships
 paths:
   /user:
     post:
@@ -28,11 +32,11 @@ paths:
       summary: Create user
       operationId: createUser
       requestBody:
-        description: Created user object
+        description: Created user object  TODO https://stackoverflow.com/questions/1860645/create-request-with-post-which-response-codes-200-or-201-and-content
         content:
           '*/*':
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/UserRegist'
         required: true
       responses:
         201:
@@ -40,7 +44,7 @@ paths:
           content: 
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/CreatedMessage'
         400:
           description: Bad Request
           content: 
@@ -53,14 +57,44 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  # /user/login:
+    get:
+      tags:
+      - user
+      summary: Get users
+      operationId: getUsers
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserList'
+        400:
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        404:
+          description: Not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  # /login:
   #   get:
   #     tags:
   #     - user
   #     summary: (Not implemented)Logs user into the system
   #     operationId: loginUser
   #     parameters:
-  #     - name: username
+  #     - name: user_id
   #       in: query
   #       description: The user name for login
   #       required: true
@@ -91,9 +125,9 @@ paths:
   #             schema:
   #               type: string
   #       400:
-  #         description: Invalid username/password supplied
+  #         description: Invalid user_id/password supplied
   #         content: {}
-  # /user/logout:
+  # /logout:
   #   get:
   #     tags:
   #     - user
@@ -103,33 +137,39 @@ paths:
   #       default:
   #         description: successful operation
   #         content: {}
-  /user/{username}:
+  /user/{user_id}:
     get:
       tags:
       - user
-      summary: Get user by user name
-      operationId: getUserByName
+      summary: Get user by ID
+      operationId: getUserById
       parameters:
-      - name: username
+      - name: user_id
         in: path
         required: true
         schema:
           type: string
       responses:
         200:
-          description: successful operation
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
         400:
-          description: Invalid username supplied
+          description: Bad Request
           content: 
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         404:
-          description: User not found
+          description: Not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal Server Error
           content: 
             application/json:
               schema:
@@ -137,12 +177,12 @@ paths:
     put:
       tags:
       - user
-      summary: Updated user
-      operationId: updateUser
+      summary: Update user by ID
+      operationId: updateUserById
       parameters:
-      - name: username
+      - name: user_id
         in: path
-        description: name that need to be updated
+        description: user ID
         required: true
         schema:
           type: string
@@ -154,14 +194,26 @@ paths:
               $ref: '#/components/schemas/User'
         required: true
       responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
         400:
-          description: Invalid user supplied
+          description: Bad Request
           content: 
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         404:
-          description: User not found
+          description: Not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal Server Error
           content: 
             application/json:
               schema:
@@ -170,24 +222,32 @@ paths:
     delete:
       tags:
       - user
-      summary: Delete user
-      operationId: deleteUser
+      summary: Delete user by ID
+      operationId: deleteUserById
       parameters:
-      - name: username
+      - name: user_id
         in: path
-        description: The name that needs to be deleted
+        description: user ID
         required: true
         schema:
           type: string
       responses:
+        204:
+          description: No content
         400:
-          description: Invalid username supplied
+          description: Bad Request
           content: 
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         404:
-          description: User not found
+          description: Not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal Server Error
           content: 
             application/json:
               schema:
@@ -197,12 +257,12 @@ paths:
       tags:
       - role
       summary: Create role
-      operationId: createMenu
+      operationId: createRole
       requestBody:
         content:
           '*/*':
             schema:
-              $ref: '#/components/schemas/Menu'
+              $ref: '#/components/schemas/Role'
         required: true
       responses:
         201:
@@ -210,7 +270,7 @@ paths:
           content: 
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/CreatedMessage'
         400:
           description: Bad Request
           content: 
@@ -223,33 +283,63 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /role/{rolename}:
     get:
       tags:
       - role
-      summary: Get role by name
-      operationId: getMenuByName
+      summary: Get all role
+      operationId: getRole
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleList'
+        400:
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /role/{role_id}:
+    get:
+      tags:
+      - role
+      summary: Get role by role ID
+      operationId: getRoleById
       parameters:
-      - name: rolename
+      - name: role_id
         in: path
         required: true
         schema:
           type: string
       responses:
         200:
-          description: successful operation
+          description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Menu'
+                $ref: '#/components/schemas/Role'
         400:
-          description: Invalid username supplied
+          description: Bad Request
           content: 
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         404:
-          description: User not found
+          description: Not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal Server Error
           content: 
             application/json:
               schema:
@@ -257,10 +347,10 @@ paths:
     put:
       tags:
       - role
-      summary: Update role
-      operationId: updateMenu
+      summary: Update role by ID
+      operationId: updateRoleById
       parameters:
-      - name: rolename
+      - name: role_id
         in: path
         required: true
         schema:
@@ -269,17 +359,29 @@ paths:
         content:
           '*/*':
             schema:
-              $ref: '#/components/schemas/Menu'
+              $ref: '#/components/schemas/Role'
         required: true
       responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
         400:
-          description: Invalid user supplied
+          description: Bad Request
           content: 
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         404:
-          description: User not found
+          description: Not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal Server Error
           content: 
             application/json:
               schema:
@@ -287,38 +389,46 @@ paths:
     delete:
       tags:
       - role
-      summary: Delete role
-      operationId: deleteMenu
+      summary: Delete role by ID
+      operationId: deleteRoleById
       parameters:
-      - name: Menuname
+      - name: role_id
         in: path
         required: true
         schema:
           type: string
       responses:
+        204:
+          description: No content
         400:
-          description: Invalid username supplied
+          description: Bad Request
           content: 
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         404:
-          description: User not found
+          description: Not found
           content: 
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /menu:
+        500:
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /operation:
     post:
       tags:
-      - menu
-      summary: Create menu
-      operationId: createMenu
+      - operation
+      summary: Create operation
+      operationId: createOperation
       requestBody:
         content:
           '*/*':
             schema:
-              $ref: '#/components/schemas/Menu'
+              $ref: '#/components/schemas/Operation'
         required: true
       responses:
         201:
@@ -326,7 +436,37 @@ paths:
           content: 
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/CreatedMessage'
+        400:
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        404:
+          description: Not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      tags:
+      - operation
+      summary: Get all operation
+      operationId: getOperation
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationList'
         400:
           description: Bad Request
           content: 
@@ -339,38 +479,50 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /menu/{menuname}:
+  /operation/{operation_id}:
     get:
       tags:
-      - menu
-      summary: Get menu by name
-      operationId: getMenuByName
+      - operation
+      summary: Get operation by ID
+      operationId: getOperationById
       parameters:
-      - name: menuname
+      - name: operation_id
         in: path
         required: true
         schema:
           type: string
       responses:
         200:
-          description: successful operation
+          description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Menu'
+                $ref: '#/components/schemas/Operation'
         400:
-          description: Invalid username supplied
-          content: {}
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         404:
-          description: User not found
-          content: {}
+          description: Not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
     put:
       tags:
-      - menu
-      summary: Update menu
-      operationId: updateMenu
+      - operation
+      summary: Update operation
+      operationId: updateOperation
       parameters:
-      - name: menuname
+      - name: operation_id
         in: path
         required: true
         schema:
@@ -379,41 +531,222 @@ paths:
         content:
           '*/*':
             schema:
-              $ref: '#/components/schemas/Menu'
+              $ref: '#/components/schemas/Operation'
         required: true
       responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Operation'
         400:
-          description: Invalid user supplied
-          content: {}
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         404:
-          description: User not found
-          content: {}
+          description: Not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
     delete:
       tags:
-      - menu
-      summary: Delete menu
-      operationId: deleteMenu
+      - operation
+      summary: Delete operation
+      operationId: deleteOperation
       parameters:
-      - name: Menuname
+      - name: Operationname
         in: path
         required: true
         schema:
           type: string
       responses:
+        204:
+          description: No content
         400:
-          description: Invalid username supplied
-          content: {}
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
         404:
-          description: User not found
-          content: {}
-  /user-role/{username}:
+          description: Not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /device:
+    post:
+      tags:
+      - device
+      summary: Create device
+      operationId: createDevice
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/Device'
+        required: true
+      responses:
+        201:
+          description: Created
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedMessage'
+        400:
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        404:
+          description: Not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /device/{device_token}:
+    get:
+      tags:
+      - device
+      summary: Get device by device token
+      operationId: getOperationByName
+      parameters:
+      - name: device_token
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceList'
+        400:
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        404:
+          description: Not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+      - device
+      summary: Update device
+      operationId: updateOperation
+      parameters:
+      - name: device_token
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/Operation'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Operation'
+        400:
+          description: Invalid user supplied
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        404:
+          description: Not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+      - device
+      summary: Delete device
+      operationId: deleteOperation
+      parameters:
+      - name: Operationname
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        204:
+          description: No content
+        400:
+          description: Invalid user supplied
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        404:
+          description: Not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /user-role/{user_id}:
     get:
       tags:
       - user-role
-      summary: Get user-role relationships by user name
+      summary: Get user-role relationships by user ID
       operationId: getUserRoleByName
       parameters:
-      - name: username
+      - name: user_id
         in: path
         required: true
         schema:
@@ -424,32 +757,38 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserRole'
+                $ref: '#/components/schemas/UserGroupRole'
         400:
-          description: Invalid username supplied
+          description: Invalid user_id supplied
           content: 
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         404:
-          description: User not found
+          description: Not found
           content: 
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /user-role/{username}/{rolename}:
+        500:
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /user-role/{user_id}/{role_id}:
     put:
       tags:
       - user-role
       summary: Create user and role relationsip
       operationId: createUserRole
       parameters:
-      - name: username
+      - name: user_id
         in: path
         required: true
         schema:
           type: string
-      - name: rolename
+      - name: role_id
         in: path
         required: true
         schema:
@@ -458,13 +797,19 @@ paths:
         204:
           description: successful operation
         400:
-          description: Invalid username or rolename supplied
+          description: Invalid user_id or role_id supplied
           content: 
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         404:
-          description: User or role not found
+          description: Not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal Server Error
           content: 
             application/json:
               schema:
@@ -475,12 +820,12 @@ paths:
       summary: Delete user and role relationship
       operationId: deleteUserRole
       parameters:
-      - name: username
+      - name: user_id
         in: path
         required: true
         schema:
           type: string
-      - name: rolename
+      - name: role_id
         in: path
         required: true
         schema:
@@ -489,25 +834,31 @@ paths:
         204:
           description: successful operation
         400:
-          description: Invalid username or rolename supplied
+          description: Invalid user_id or role_id supplied
           content: 
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         404:
-          description: Relationship not found
+          description: Not found
           content: 
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /role-menu/{rolename}:
+        500:
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /role-operation/{role_id}:
     get:
       tags:
-      - role-menu
-      summary: Get role-menu relationships by role name
-      operationId: getRoleMenuByName
+      - role-operation
+      summary: Get role-operation relationships by role ID
+      operationId: getRoleOperationByName
       parameters:
-      - name: rolename
+      - name: role_id
         in: path
         required: true
         schema:
@@ -518,32 +869,38 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RoleMenu'
+                $ref: '#/components/schemas/RoleOperation'
         400:
-          description: Invalid rolename supplied
+          description: Invalid role_id supplied
           content: 
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         404:
-          description: Role not found
+          description: Not found
           content: 
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /role-menu/{rolename}/{menuname}:
+        500:
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /role-operation/{role_id}/{operation_id}:
     put:
       tags:
-      - role-menu
-      summary: Create role and menu relationsip
-      operationId: createRoleMenu
+      - role-operation
+      summary: Create role and operation relationsip
+      operationId: createRoleOperation
       parameters:
-      - name: rolename
+      - name: role_id
         in: path
         required: true
         schema:
           type: string
-      - name: menuname
+      - name: operation_id
         in: path
         required: true
         schema:
@@ -552,29 +909,35 @@ paths:
         204:
           description: successful operation
         400:
-          description: Invalid rolename or menuname supplied
+          description: Invalid role_id or operation_id supplied
           content: 
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         404:
-          description: User or role not found
+          description: Not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal Server Error
           content: 
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
     delete:
       tags:
-      - role-menu
-      summary: Delete role and menu relationship
+      - role-operation
+      summary: Delete role and operation relationship
       operationId: deleteUserRole
       parameters:
-      - name: rolename
+      - name: role_id
         in: path
         required: true
         schema:
           type: string
-      - name: menuname
+      - name: operation_id
         in: path
         required: true
         schema:
@@ -583,96 +946,166 @@ paths:
         204:
           description: successful operation
         400:
-          description: Invalid username or rolename supplied
+          description: Invalid user_id or role_id supplied
           content: 
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         404:
-          description: Relationship not found
+          description: Not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal Server Error
           content: 
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
+    UserRegist:
+      type: object
+      properties:
+        user_name:
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          type: string
+          maxLength: 2048
+      required:
+        - "user_name"
     User:
       type: object
       properties:
         user_id:
           type: string
           format: string
-          maxLength: 5
-          minLength: 5
+          maxLength: 32
+          minLength: 32
         user_name:
           type: string
-          maxLength: 2048
+          maxLength: 256
           minLength: 1
+        description:
+          type: string
+          maxLength: 2048
       required:
         - "user_id"
         - "user_name"
+    UserList:
+      type: array
+      items:
+        $ref: '#/components/schemas/User'
     Role:
       type: object
       properties:
         role_id:
           type: string
           format: string
-          maxLength: 5
-          minLength: 5
+          maxLength: 32
+          minLength: 32
         role_name:
           type: string
-          maxLength: 2048
+          format: string
+          maxLength: 256
           minLength: 1
+        description:
+          type: string
+          maxLength: 2048
       required:
         - "role_id"
         - "role_name"
-    Menu:
+    RoleList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Role'
+    Operation:
       type: object
       properties:
-        menu_id:
+        operation_id:
           type: string
           format: string
-          maxLength: 5
-          minLength: 5
-        menu_name:
+          maxLength: 32
+          minLength: 32
+        operation_name:
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
           type: string
           maxLength: 2048
-          minLength: 1
       required:
-        - "menu_id"
-        - "menu_name"
-    UserRole:
+        - "operation_id"
+        - "operation_name"
+    OperationList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Operation'
+    Device:
+      type: object
+      properties:
+        device_token:
+          type: string
+          format: string
+        disp_name:
+          type: string
+          format: string
+      required:
+        - "device_token"
+        - "disp_name"
+    DeviceList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Device'
+    UserGroupRole:
       type: object
       properties:
         user_id:
           type: string
           format: string
-          maxLength: 5
-          minLength: 5
+          maxLength: 36
+          minLength: 36
+        group_id:
+          type: string
+          format: string
+          maxLength: 36
+          minLength: 36
         role_id:
           type: string
           format: string
-          maxLength: 5
-          minLength: 5
+          maxLength: 8
+          minLength: 8
       required:
         - "user_id"
+        - "group_id"
         - "role_id"
-    RoleMenu:
+    UserGroupRoleList:
+      type: array
+      items:
+        $ref: '#/components/schemas/UserGroupRole'
+    RoleOperation:
       type: object
       properties:
         role_id:
           type: string
           format: string
-          maxLength: 5
-          minLength: 5
-        menu_id:
+          maxLength: 32
+          minLength: 32
+        operation_id:
           type: string
           format: string
-          maxLength: 5
-          minLength: 5
+          maxLength: 32
+          minLength: 32
       required:
         - "role_id"
-        - "menu_id"
+        - "operation_id"
+    RoleOperationList:
+      type: array
+      items:
+        $ref: '#/components/schemas/RoleOperation'
     CreatedUrl:
       type: object
       properties:
@@ -694,6 +1127,36 @@ components:
           type: string
           maxLength: 2024
           minLength: 1
+    UserDevice:
+      type: object
+      properties:
+        user_id:
+          type: string
+          format: string
+          maxLength: 32
+          minLength: 32
+        device_token:
+          type: string
+          format: string
+      required:
+        - "user_id"
+        - "device_token"
+    UserDeviceList:
+      type: array
+      items:
+        $ref: '#/components/schemas/UserDevice'
+    CreatedMessage:
+      type: object
+      properties:
+        location:
+          type: string
+          format: string
+        message:
+          type: string
+          format: string
+      required:
+        - "location"
+        - "message"
   # securitySchemes:
   #   petstore_auth:
   #     type: oauth2
