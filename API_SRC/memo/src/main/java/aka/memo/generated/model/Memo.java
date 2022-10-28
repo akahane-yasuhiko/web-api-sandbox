@@ -15,17 +15,45 @@ import javax.validation.constraints.*;
 
 
 public class Memo   {
+  @JsonProperty("thread_id")
+  private String threadId = null;
+
   @JsonProperty("thread_title")
   private String threadTitle = null;
 
+  @JsonProperty("user_id")
+  private String userId = null;
+
   @JsonProperty("user_name")
   private String userName = null;
+
+  @JsonProperty("memo_id")
+  private String memoId = null;
 
   @JsonProperty("memo_body")
   private String memoBody = null;
 
   @JsonProperty("update_datetime")
   private String updateDatetime = null;
+
+  public Memo threadId(String threadId) {
+    this.threadId = threadId;
+    return this;
+  }
+
+  /**
+   * Get threadId
+   * @return threadId
+   **/
+  @Schema(description = "")
+  
+    public String getThreadId() {
+    return threadId;
+  }
+
+  public void setThreadId(String threadId) {
+    this.threadId = threadId;
+  }
 
   public Memo threadTitle(String threadTitle) {
     this.threadTitle = threadTitle;
@@ -46,6 +74,25 @@ public class Memo   {
     this.threadTitle = threadTitle;
   }
 
+  public Memo userId(String userId) {
+    this.userId = userId;
+    return this;
+  }
+
+  /**
+   * Get userId
+   * @return userId
+   **/
+  @Schema(description = "")
+  
+    public String getUserId() {
+    return userId;
+  }
+
+  public void setUserId(String userId) {
+    this.userId = userId;
+  }
+
   public Memo userName(String userName) {
     this.userName = userName;
     return this;
@@ -63,6 +110,25 @@ public class Memo   {
 
   public void setUserName(String userName) {
     this.userName = userName;
+  }
+
+  public Memo memoId(String memoId) {
+    this.memoId = memoId;
+    return this;
+  }
+
+  /**
+   * Get memoId
+   * @return memoId
+   **/
+  @Schema(description = "")
+  
+    public String getMemoId() {
+    return memoId;
+  }
+
+  public void setMemoId(String memoId) {
+    this.memoId = memoId;
   }
 
   public Memo memoBody(String memoBody) {
@@ -113,15 +179,18 @@ public class Memo   {
       return false;
     }
     Memo memo = (Memo) o;
-    return Objects.equals(this.threadTitle, memo.threadTitle) &&
+    return Objects.equals(this.threadId, memo.threadId) &&
+        Objects.equals(this.threadTitle, memo.threadTitle) &&
+        Objects.equals(this.userId, memo.userId) &&
         Objects.equals(this.userName, memo.userName) &&
+        Objects.equals(this.memoId, memo.memoId) &&
         Objects.equals(this.memoBody, memo.memoBody) &&
         Objects.equals(this.updateDatetime, memo.updateDatetime);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(threadTitle, userName, memoBody, updateDatetime);
+    return Objects.hash(threadId, threadTitle, userId, userName, memoId, memoBody, updateDatetime);
   }
 
   @Override
@@ -129,8 +198,11 @@ public class Memo   {
     StringBuilder sb = new StringBuilder();
     sb.append("class Memo {\n");
     
+    sb.append("    threadId: ").append(toIndentedString(threadId)).append("\n");
     sb.append("    threadTitle: ").append(toIndentedString(threadTitle)).append("\n");
+    sb.append("    userId: ").append(toIndentedString(userId)).append("\n");
     sb.append("    userName: ").append(toIndentedString(userName)).append("\n");
+    sb.append("    memoId: ").append(toIndentedString(memoId)).append("\n");
     sb.append("    memoBody: ").append(toIndentedString(memoBody)).append("\n");
     sb.append("    updateDatetime: ").append(toIndentedString(updateDatetime)).append("\n");
     sb.append("}");

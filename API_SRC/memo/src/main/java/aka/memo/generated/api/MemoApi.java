@@ -6,7 +6,7 @@
 package aka.memo.generated.api;
 
 import aka.memo.generated.model.ErrorResponse;
-import aka.memo.generated.model.MemoGroups;
+import aka.memo.generated.model.MemoView;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -41,9 +41,9 @@ import java.util.Map;
 import java.util.Optional;
 
 @Validated
-public interface MemosApi {
+public interface MemoApi {
 
-    Logger log = LoggerFactory.getLogger(MemosApi.class);
+    Logger log = LoggerFactory.getLogger(MemoApi.class);
 
     Optional<ObjectMapper> getObjectMapper();
 
@@ -51,19 +51,19 @@ public interface MemosApi {
 
     
 
-    @Operation(summary = "List of memos", description = "", tags={ "memos" })
+    @Operation(summary = "List of memo", description = "", tags={ "memo" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MemoGroups.class))),
+        @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MemoView.class))),
         
         @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
         
         @ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
         
         @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))) })
-    @RequestMapping(value = "/memos",
+    @RequestMapping(value = "/memo",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<MemoGroups> memos();
+    ResponseEntity<MemoView> memos(@Parameter(in = ParameterIn.QUERY, description = "xxxxx" ,schema=@Schema()) @Valid @RequestParam(value = "user_id", required = false) String userId, @Parameter(in = ParameterIn.QUERY, description = "xxxxx" ,schema=@Schema()) @Valid @RequestParam(value = "thread_id", required = false) String threadId);
 
 }
 

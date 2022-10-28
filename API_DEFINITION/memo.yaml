@@ -13,19 +13,30 @@ tags:
 - name: memo
   description: Operations about memo
 paths:
-  /memos:
+  /memo:
     get:
       tags:
-      - memos
-      summary: List of memos
+      - memo
+      summary: List of memo
       operationId: memos
+      parameters:
+        - name: user_id
+          in: query
+          description: xxxxx
+          schema:
+            type: string
+        - name: thread_id
+          in: query
+          description: xxxxx
+          schema:
+            type: string
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MemoGroups'
+                $ref: '#/components/schemas/MemoView'
         400:
           description: Bad Request
           content: 
@@ -49,9 +60,15 @@ components:
     Memo:
       type: object
       properties:
+        thread_id: 
+          type: string
         thread_title: 
           type: string
+        user_id:
+          type: string
         user_name:
+          type: string
+        memo_id:
           type: string
         memo_body:
           type: string
@@ -60,16 +77,25 @@ components:
     MemoGroup:
       type: object
       properties:
+        group_id: 
+          type: string
         group_name: 
           type: string
         memos:
           type: array
           items:
             $ref: '#/components/schemas/Memo'
-    MemoGroups:
-      type: array
-      items:
-        $ref: '#/components/schemas/MemoGroup'
+    MemoView:
+      type: object
+      properties:
+        user_name: 
+          type: string
+        bio: 
+          type: string
+        memo_groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemoGroup'
     ErrorResponse:
       type: object
       properties:

@@ -18,12 +18,34 @@ import javax.validation.constraints.*;
 
 
 public class MemoGroup   {
+  @JsonProperty("group_id")
+  private String groupId = null;
+
   @JsonProperty("group_name")
   private String groupName = null;
 
   @JsonProperty("memos")
   @Valid
   private List<Memo> memos = null;
+
+  public MemoGroup groupId(String groupId) {
+    this.groupId = groupId;
+    return this;
+  }
+
+  /**
+   * Get groupId
+   * @return groupId
+   **/
+  @Schema(description = "")
+  
+    public String getGroupId() {
+    return groupId;
+  }
+
+  public void setGroupId(String groupId) {
+    this.groupId = groupId;
+  }
 
   public MemoGroup groupName(String groupName) {
     this.groupName = groupName;
@@ -81,13 +103,14 @@ public class MemoGroup   {
       return false;
     }
     MemoGroup memoGroup = (MemoGroup) o;
-    return Objects.equals(this.groupName, memoGroup.groupName) &&
+    return Objects.equals(this.groupId, memoGroup.groupId) &&
+        Objects.equals(this.groupName, memoGroup.groupName) &&
         Objects.equals(this.memos, memoGroup.memos);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(groupName, memos);
+    return Objects.hash(groupId, groupName, memos);
   }
 
   @Override
@@ -95,6 +118,7 @@ public class MemoGroup   {
     StringBuilder sb = new StringBuilder();
     sb.append("class MemoGroup {\n");
     
+    sb.append("    groupId: ").append(toIndentedString(groupId)).append("\n");
     sb.append("    groupName: ").append(toIndentedString(groupName)).append("\n");
     sb.append("    memos: ").append(toIndentedString(memos)).append("\n");
     sb.append("}");

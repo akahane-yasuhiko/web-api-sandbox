@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
-
+import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,24 +14,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import aka.memo.generated.api.MemosApi;
-import aka.memo.generated.model.MemoGroups;
-import aka.memo.service.MemoGroupsService;
+import aka.memo.generated.api.MemoApi;
+import aka.memo.generated.model.MemoView;
+import aka.memo.service.MemoService;
 
 @RestController
-public class MemosApiController implements MemosApi {
+public class MemoApiController implements MemoApi {
   
   @Autowired
-  MemoGroupsService memoGroupsService;
+  MemoService memoGroupsService;
 
-  private static final Logger log = LoggerFactory.getLogger(MemosApiController.class);
+  private static final Logger log = LoggerFactory.getLogger(MemoApiController.class);
 
   private final ObjectMapper objectMapper;
 
   private final HttpServletRequest request;
 
   @org.springframework.beans.factory.annotation.Autowired
-  public MemosApiController(ObjectMapper objectMapper, HttpServletRequest request) {
+  public MemoApiController(ObjectMapper objectMapper, HttpServletRequest request) {
     this.objectMapper = objectMapper;
     this.request = request;
   }
@@ -46,17 +46,18 @@ public class MemosApiController implements MemosApi {
     return Optional.ofNullable(request);
   }
 
-  public ResponseEntity<MemoGroups> memos() {
+  @Override
+  public ResponseEntity<MemoView> memos(String userId, String threadId) {
     String accept = request.getHeader("Accept");
     if (accept != null && accept.contains("application/json")) {
-      MemoGroups result = memoGroupsService.getMemoGroups();
+      MemoView result = memoGroupsService.getMemoView(userId, threadId);
       if(log.isInfoEnabled())
         log.info(result.toString());
       return new ResponseEntity<>(result, HttpStatus.OK);
     }
     
     
-    return new ResponseEntity<MemoGroups>(HttpStatus.NOT_IMPLEMENTED);
+    return new ResponseEntity<MemoView>(HttpStatus.NOT_IMPLEMENTED);
   }
 
 }
