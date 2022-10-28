@@ -1,0 +1,9 @@
+psql -h localhost -p 5432 -U postgres -d postgres
+\du
+
+
+
+psql -h localhost -p 5432 -U memosadmin -d memos_db
+\du
+
+
